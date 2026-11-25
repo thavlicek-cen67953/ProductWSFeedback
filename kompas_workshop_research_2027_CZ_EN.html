@@ -1,64 +1,957 @@
+<!--
+  ======================================================================
+  NÁVOD: JAK UPRAVOVAT OTÁZKY (bez znalosti programování)
+  ======================================================================
+  Projekt má dva soubory, které patří k sobě a musí zůstat ve STEJNÉ
+  SLOŽCE:
+
+    1. "otazky.js"
+       → SEM upravujete obsah dotazníku – otázky a možnosti odpovědí.
+       Píšou se jako OBYČEJNÝ TEXT, podobně jako byste je psali do
+       Wordu: nejdřív text otázky, pod ní odrážkami možnosti odpovědí.
+       Žádné uvozovky, čárky ani složené závorky nejsou potřeba.
+
+    2. "kompas_workshop_research_2027_CZ_EN.html" (tento soubor)
+       → Řídí vzhled a chování stránky (barvy, rozložení, přepínání
+       jazyků, kontrolu vyplnění, tisk). Tento soubor otevírejte
+       dvojklikem, když chcete zobrazit NÁHLED dotazníku – automaticky
+       si načte aktuální obsah z "otazky.js".
+
+  Chcete-li tedy upravit otázky, otevřete a upravujte "otazky.js".
+  Tento HTML soubor zpravidla upravovat nepotřebujete.
+
+  JAK VYPADÁ JEDNA OTÁZKA (v souboru otazky.js)
+    1) Text otázky, kterou uvidí respondent
+    Typ: jedna možnost | Povinná: ano
+    - První možnost odpovědi
+    - Druhá možnost odpovědi
+    - Třetí možnost odpovědi
+
+  Mezi jednotlivými otázkami nechte prázdný řádek.
+
+  "Typ:" může být jedna z těchto čtyř hodnot:
+    - jedna možnost       → respondent vybere jen jednu odpověď
+    - více možností       → respondent může zaškrtnout víc odpovědí
+                             (lze omezit počet, např. "více možností (max 2)")
+    - hodnocení 1-5       → škála 1–5, odrážky = popisky škály (1,2,3,4,5)
+    - volný text          → respondent napíše odpověď vlastními slovy
+                             (místo odrážek lze přidat "Nápověda:" a/nebo
+                             "Placeholder:" – viz příklady v otazky.js)
+
+  "Povinná:" je buď "ano", nebo "ne".
+
+  JAK PŘIDAT/UBRAT MOŽNOST ODPOVĚDI
+    Přidejte nebo smažte řádek začínající pomlčkou "- ".
+
+  JAK PŘIDAT/UBRAT CELOU OTÁZKU
+    Napište/smažte celý blok (od čísla otázky po poslední odrážku,
+    včetně navazujícího prázdného řádku). Číslování otázek si nehlídejte
+    – je jen orientační, dotazník si otázky i progress bar přepočítá sám.
+
+  JAK PŘIDAT NADPIS SEKCE (např. "01 · Vaše účast")
+    Napište řádek začínající "## ", a to těsně PŘED otázku, která má
+    sekci zahajovat, např.: "## 02 · Co vám přinesly workshopy".
+
+  JAK SI PŘIDAT POZNÁMKU (KOMENTÁŘ)
+    Napište řádek začínající dvěma lomítky "//" – dotazník ho bude
+    zcela ignorovat. Můžete tak u otázky nechat poznámku pro kolegy,
+    aniž by se cokoliv rozbilo, např.:
+      // POZNÁMKA: zkontrolovat formulaci se Zuzkou
+
+  DŮLEŽITÉ: český blok (window.OTAZKY_CZ) a anglický blok
+  (window.OTAZKY_EN) v souboru otazky.js musí mít vždy STEJNÝ POČET
+  otázek a stejné pořadí – jinak dotazník zobrazí chybu a napíše,
+  kolik otázek má kdo navíc.
+
+  JEDNO TECHNICKÉ OMEZENÍ v otazky.js: v textu otázek nepoužívejte znak
+  zpětný apostrof (`) ani sekvenci dolar + složená závorka "${" – jde
+  o speciální znaky. V běžném textu je prakticky nikdy nepotřebujete.
+
+  JAK ZKONTROLOVAT, ŽE JE VŠE V POŘÁDKU
+    Po úpravě "otazky.js" soubor uložte a otevřete (znovu načtěte)
+    v prohlížeči soubor "kompas_workshop_research_2027_CZ_EN.html".
+    Pokud v textu uděláte chybu (např. zapomenete "Typ:" nebo
+    "Povinná:", nebo smažete zpětný apostrof), dotazník vám místo
+    náhledu zobrazí červené upozornění, které přesně popíše, co
+    a u které otázky chybí.
+
+  VERZE A KOMENTÁŘE KE ZMĚNÁM
+    Oba soubory jsou uložené v GitHubu, takže se každé uložení
+    automaticky stává novou verzí (historii i rozdíly oproti předchozí
+    verzi najdete na GitHubu přes "History" u souboru otazky.js).
+    Ke konkrétním řádkům lze přidávat komentáře přímo na GitHubu; pro
+    rychlé poznámky přímo v textu stačí řádek "// poznámka" popsaný výše.
+  ======================================================================
+-->
 <!doctype html>
 <html lang="cs">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Product Workshops & Learning — Feedback 2026 / Needs 2027</title>
-<style>
-:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#17243b;background:#f4f6fa;font-synthesis:none}*{box-sizing:border-box}body{margin:0} .wrap{max-width:900px;margin:0 auto;padding:28px 18px 76px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.brand{font-size:12px;font-weight:800;letter-spacing:.15em;color:#284783}.switch{display:flex;border:1px solid #d6deed;border-radius:12px;background:white;padding:4px;gap:2px}.switch button{background:transparent;color:#425574;border:0;border-radius:9px;padding:8px 15px;font-weight:750;cursor:pointer}.switch button.active{background:#173c7c;color:white}.hero{background:linear-gradient(120deg,#193b7a,#365ba0);color:#fff;border-radius:22px;padding:34px 34px 30px;box-shadow:0 12px 32px #1d3b7316}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800;opacity:.8}.hero h1{font-size:clamp(25px,4vw,38px);line-height:1.16;margin:12px 0 15px;letter-spacing:-.025em}.hero p{line-height:1.6;font-size:15px;color:#edf2ff;max-width:720px;margin:0 0 18px}.meta{display:flex;flex-wrap:wrap;gap:9px}.chip{border:1px solid #ffffff50;color:white;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:650}.bar{margin:20px 0 8px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#66758f;font-weight:700}.track{height:7px;background:#dce4f0;border-radius:999px;overflow:hidden;margin-bottom:24px}.progress{height:100%;width:0%;background:#2f64c0;transition:width .2s}.section-label{display:flex;align-items:center;gap:9px;font-size:12px;color:#53698f;font-weight:850;text-transform:uppercase;letter-spacing:.08em;margin:29px 0 13px}.section-label:after{content:"";height:1px;background:#dce3ef;flex:1}.q{background:#fff;border:1px solid #e2e8f2;border-radius:17px;padding:23px 25px;margin:12px 0;box-shadow:0 3px 12px #1b37660a}.num{color:#2e61b7;font-size:12px;font-weight:850;margin-bottom:6px}.q h2{font-size:17px;line-height:1.4;margin:0 0 5px;letter-spacing:-.01em}.help{color:#66758b;font-size:12px;line-height:1.5;margin:0 0 14px}.req{color:#bc4d43}.opts{display:grid;gap:8px}.choice{display:flex;align-items:flex-start;gap:11px;border:1px solid #e4e9f2;background:#fbfcfe;border-radius:11px;padding:11px 12px;line-height:1.4;font-size:14px;cursor:pointer}.choice:has(input:checked){border-color:#5382ca;background:#eff5ff}.choice input{accent-color:#235eb0;width:16px;height:16px;flex:none;margin:2px 0 0}.rating{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.rating label{display:flex;flex-direction:column;align-items:center;gap:5px;border:1px solid #e0e6f2;border-radius:11px;padding:11px 3px;cursor:pointer;font-size:12px;color:#516481}.rating label:has(input:checked){background:#e9f1ff;border-color:#447bd2;color:#163f8b}.rating input{accent-color:#225cb3}.rating strong{font-size:18px}textarea{width:100%;resize:vertical;border:1px solid #d5deeb;background:#fbfdff;border-radius:12px;padding:13px;font:inherit;font-size:14px;min-height:91px;line-height:1.6}textarea:focus{outline:2px solid #a8c4fa;outline-offset:1px}.foot{position:relative;overflow:hidden;background:#fff;border:1px solid #e2e8f2;border-radius:18px;margin-top:24px;padding:26px 25px 22px}.foot:before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(120deg,#193b7a,#365ba0)}.foot p{font-size:13px;color:#65758f;line-height:1.55;margin:0 0 18px}.btns{display:flex;gap:12px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:11px;background:#184482;color:white;font:inherit;font-size:13px;font-weight:800;padding:12px 19px;cursor:pointer;box-shadow:0 6px 16px -5px #18448270;transition:background-color .15s ease,box-shadow .15s ease,transform .1s ease}.btn svg{flex:none}.btn:hover{background:#123766;box-shadow:0 8px 20px -5px #18448270}.btn:active{transform:translateY(1px) scale(.98);box-shadow:0 3px 10px -4px #18448270}.btn:focus-visible{outline:2px solid #90b4ec;outline-offset:2px}.btn.secondary{background:#e9eef8;color:#244675;box-shadow:none}.btn.secondary:hover{background:#dbe5f7}.btn.secondary:active{transform:translateY(1px) scale(.98)}.btn.secondary:focus-visible{outline:2px solid #789ad8;outline-offset:2px}.message{margin-top:14px;font-size:13px;font-weight:650;color:#365f9a;transition:color .15s ease}.message:empty{margin-top:0}.message.ok{color:#1f7a44}.message.warn{color:#ad342d}.smallprint{color:#7c8799;font-size:11px;line-height:1.6;margin-top:19px}.err{color:#ad342d;font-size:13px;margin:9px 0 0}.success{margin-top:14px;padding:13px 15px;border:1px solid #b5dec6;background:#effaf3;border-radius:10px;color:#245d39;font-size:13px;line-height:1.5}@media(max-width:560px){.wrap{padding:14px 11px 50px}.hero{padding:27px 21px}.q{padding:20px 17px}.rating{gap:4px}.rating label{padding:9px 0}.foot{padding:18px 18px 16px}.btns{flex-direction:column}.btns .btn{width:100%;justify-content:center}}@media print{body{background:white}.wrap{padding:0}.top,.bar,.track,.foot,.smallprint{display:none}.hero{color:#17243b;background:white;box-shadow:none;padding:0 0 14px}.hero p{color:#17243b}.chip{border-color:#aaa;color:#17243b}.q{break-inside:avoid;box-shadow:none}.section-label{margin-top:15px}}
-</style>
-</head>
-<body>
-<div class="wrap">
- <div class="top"><span class="brand">CoE PRODUCT MANAGEMENT</span><div class="switch" role="group" aria-label="Language"><button id="cz" class="active" type="button">CZ</button><button id="en" type="button">EN</button></div></div>
- <header class="hero"><div class="eyebrow" data-i18n="eyebrow"></div><h1 data-i18n="title"></h1><p data-i18n="intro"></p><div class="meta"><span class="chip" data-i18n="duration"></span><span class="chip" data-i18n="purpose"></span></div></header>
- <div class="bar"><span data-i18n="progressLabel"></span><span id="count">0 / 5</span></div><div class="track"><div class="progress" id="progress"></div></div>
- <form id="survey" novalidate>
- <div class="section-label" data-i18n="s1"></div>
- <div id="q1" class="q"></div><div id="q2" class="q"></div>
- <div class="section-label" data-i18n="s2"></div>
- <div id="q3" class="q"></div><div id="q4" class="q"></div><div id="q5" class="q"></div><div id="q6" class="q"></div>
- <div class="section-label" data-i18n="s3"></div>
- <div id="q7" class="q"></div><div id="q8" class="q"></div><div id="q9" class="q"></div><div id="q10" class="q"></div>
- <div class="foot"><p data-i18n="thanks"></p><div class="btns"><button class="btn" type="button" id="review"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="review"></span></button><button class="btn secondary" type="button" id="print"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg><span data-i18n="print"></span></button></div><p class="message" id="message" role="status" aria-live="polite"></p></div>
- </form>
- <div class="smallprint" data-i18n="demo"></div>
-</div>
-<script>
-const dict={
-cz:{eyebrow:'Zpětná vazba · 2026 / Podpora · 2027',title:'Vaše zkušenost s produktovými workshopy a edukací',intro:'V uplynulém roce jsme společně pracovali na produktových vizích, strategiích, Kompasu a rozvoji produktových kompetencí. Chceme zjistit, co pro vás bylo užitečné, co méně, kde dnes vidíte největší mezery a jak vás můžeme nejlépe podpořit v roce 2027. Nejde o hodnocení jednotlivců nebo týmů. Odpovídejte prosím podle své skutečné zkušenosti.',duration:'Přibližně 5–7 minut',purpose:'Pomozte nám zlepšit podporu týmů',progressLabel:'Vyplněné povinné otázky',s1:'01 · Vaše účast',s2:'02 · Co vám přinesly workshopy a edukace',s3:'03 · Potřeby a podpora pro rok 2027',thanks:'Děkujeme za otevřenou zpětnou vazbu. Pomůže nám rozhodnout, co zachovat, co změnit a na co se zaměřit v roce 2027.',review:'Zkontrolovat vyplnění',print:'Tisk / uložit jako PDF',demo:'Toto je interaktivní náhled dotazníku pro schválení. Odpovědi se nikam neodesílají ani neukládají. Pro distribuci účastníkům jej převeďte do schváleného interního nástroje (např. Microsoft Forms).',missing:'Doplňte prosím povinné otázky: ',ok:'Povinné otázky jsou vyplněné. Tento náhled neodesílá odpovědi.',max:'Lze vybrat nejvýše ',required:'Povinná otázka',optional:'Nepovinné',select:'Můžete vybrat více možností.',limited:'Vyberte nejvýše {n} možnosti.',
-q:[
-{title:'Jaká byla vaše role při workshopech?',type:'radio',req:true,opts:['Product Manager / Product Owner','Domain / Tribe / People Lead','Člen/ka produktového týmu (design, engineering, business, další)','Jiná role']},
-{title:'Kterých aktivit jste se účastnil/a?',type:'checks',req:true,opts:['Workshopy k doménové / produktové vizi a strategii','Tvorba nebo práce s Kompasem','Edukace k Opportunity Solution Tree (OST)','Edukace k Service Blueprintu / zákaznické cestě','Další produktová edukace nebo workshop','Nevím / nepamatuji si přesně']},
-{title:'Jak užitečné pro vaši práci byly workshopy a edukace, kterých jste se účastnil/a?',type:'rating',req:true,labels:['Vůbec','Spíše ne','Částečně','Spíše ano','Velmi']},
-{title:'Co pro vás bylo nejpřínosnější?',type:'checks',max:2,req:true,opts:['Ujasnění produktové / doménové vize a směru','Lepší pochopení produktové strategie a priorit','Propojení cílů, metrik a rozhodování (např. v Kompasu)','Praktické metody (např. OST, service blueprint)','Společná diskuse a sladění týmu / leadershipu','Konkrétní výstupy, šablony a materiály','Zatím nic výrazně přínosného','Jiné (upřesněte v komentáři níže)']},
-{title:'Co jste díky workshopům nebo edukaci konkrétně začali dělat jinak?',type:'text',req:true,hint:'Například změna v prioritizaci, rozhodování, práci se zákaznickými potřebami či používání Kompasu. Pokud se zatím nic nezměnilo, napište to prosím také.',placeholder:'Vaše odpověď…'},
-{title:'Co bylo méně užitečné nebo co bychom měli na workshopech či edukaci zlepšit?',type:'text',req:true,placeholder:'Vaše odpověď…'},
-{title:'Co vám dnes nejvíce brání v efektivnější produktové práci?',type:'checks',max:3,req:true,opts:['Nedostatek času / převaha operativní práce','Nejasná strategie, priority nebo očekávané výsledky','Nejasné kompetence a rozhodovací pravomoci','Nedostatek zákaznických poznatků / discovery','Nedostatek potřebných dovedností nebo zkušeností','Závislosti na jiných týmech / složitá spolupráce','Nedostatečné sladění s leadershipem či stakeholdery','Nemáme zásadní překážky','Jiné (upřesněte níže)']},
-{title:'V jakých oblastech by váš tým nejvíce ocenil další rozvoj?',type:'checks',max:3,req:true,opts:['Produktová strategie a její použití v praxi','Definice outcomes a měření dopadu','Discovery a validace zákaznických potřeb','Prioritizace a produktové rozhodování','Práce s Kompasem jako nástrojem pro řízení produktu','Stakeholder management a spolupráce s leadershipem','Návrh zákaznických cest / service blueprint','Produktové fungování a spolupráce v týmu','Jiná oblast (upřesněte níže)']},
-{title:'Jakou formu podpory od CoE Product Management byste v roce 2027 preferovali?',type:'checks',max:2,req:true,opts:['Praktický coaching přímo s týmem','Cílené workshopy na konkrétní problém','Krátké vzdělávací bloky / příklady z praxe','Šablony, návody a playbooky','Pomoc se sladěním leadershipu a stakeholderů','Sdílení zkušeností mezi týmy / komunita','Aktuálně další podporu nepotřebujeme']},
-{title:'Pokud bychom vašemu týmu v roce 2027 pomohli vyřešit jednu věc, co by to mělo být?',type:'text',req:true,hint:'Zkuste popsat konkrétní problém, ne pouze název školení.',placeholder:'Nejdůležitější problém nebo potřeba vašeho týmu…'}
-]},
-en:{eyebrow:'Feedback · 2026 / Support · 2027',title:'Your experience with product workshops and learning activities',intro:'Over the past year, we worked together on product visions, strategies, Kompas, and product management capabilities. We would like to understand what was useful, what was not, where you see the biggest gaps, and how we can best support you in 2027. This is not an evaluation of individuals or teams. Please answer based on your actual experience.',duration:'Approximately 5–7 minutes',purpose:'Help us improve support for teams',progressLabel:'Required questions completed',s1:'01 · Your participation',s2:'02 · Value of workshops and learning',s3:'03 · Needs and support for 2027',thanks:'Thank you for your candid feedback. It will help us decide what to keep, what to improve, and where to focus in 2027.',review:'Check completion',print:'Print / save as PDF',demo:'This is an interactive survey preview for approval. Answers are not submitted or stored. To distribute it, recreate it in an approved internal tool (e.g. Microsoft Forms).',missing:'Please complete the required questions: ',ok:'All required questions are completed. This preview does not submit responses.',max:'You can select up to ',required:'Required',optional:'Optional',select:'Select all that apply.',limited:'Select up to {n} options.',
-q:[
-{title:'What was your role during the workshops?',type:'radio',req:true,opts:['Product Manager / Product Owner','Domain / Tribe / People Lead','Product team member (design, engineering, business, other)','Other role']},
-{title:'Which activities did you participate in?',type:'checks',req:true,opts:['Domain / product vision and strategy workshops','Creating or working with Kompas','Opportunity Solution Tree (OST) learning','Service Blueprint / customer journey learning','Other product learning activities or workshops','Not sure / I don’t remember exactly']},
-{title:'How useful were the workshops and learning activities you attended for your actual work?',type:'rating',req:true,labels:['Not at all','Slightly','Somewhat','Quite','Extremely']},
-{title:'What did you find most valuable?',type:'checks',max:2,req:true,opts:['Clarifying the product / domain vision and direction','Better understanding of product strategy and priorities','Connecting goals, metrics and decisions (e.g. in Kompas)','Practical methods (e.g. OST, service blueprint)','Discussion and alignment within the team / leadership','Tangible outputs, templates and materials','Nothing particularly valuable so far','Other (please elaborate below)']},
-{title:'What have you actually started doing differently as a result of the workshops or learning activities?',type:'text',req:true,hint:'For example, changes in prioritization, decision-making, customer discovery or use of Kompas. If nothing has changed yet, please feel free to say so.',placeholder:'Your answer…'},
-{title:'What was less useful, or what should we improve in the workshops or learning activities?',type:'text',req:true,placeholder:'Your answer…'},
-{title:'What currently prevents your team from working more effectively as a product team?',type:'checks',max:3,req:true,opts:['Limited time / operational workload','Unclear strategy, priorities or expected outcomes','Unclear roles and decision rights','Limited customer insights / discovery','Missing capabilities or experience','Cross-team dependencies / difficult collaboration','Insufficient alignment with leadership or stakeholders','No significant barriers','Other (please specify below)']},
-{title:'In which areas would your team benefit most from further development?',type:'checks',max:3,req:true,opts:['Product strategy and applying it in practice','Defining outcomes and measuring impact','Customer discovery and validation','Prioritization and product decision-making','Using Kompas to guide product management','Stakeholder management and leadership alignment','Customer journeys / service blueprint','Product team collaboration and ways of working','Other area (please specify below)']},
-{title:'What type of support from CoE Product Management would you prefer in 2027?',type:'checks',max:2,req:true,opts:['Hands-on coaching with our team','Focused workshops on a specific challenge','Short learning sessions / practical case studies','Templates, guides and playbooks','Support with leadership / stakeholder alignment','Peer learning / product community','We do not need additional support right now']},
-{title:'If we could help your team solve just one challenge in 2027, what should it be?',type:'text',req:true,hint:'Please describe a concrete problem rather than simply naming a training course.',placeholder:'Your team’s most important challenge or need…'}
-]}}
-let lang='cz';const store={};const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function collect(){for(let i=0;i<10;i++){const q=document.getElementById('q'+(i+1)); const selected=[...q.querySelectorAll('input:checked')].map(n=>Number(n.value)); const tx=q.querySelector('textarea');store[i]=tx?tx.value:selected;}}
-function paint(){document.documentElement.lang=lang;document.title=lang==='cz'?'Zpětná vazba: workshopy a edukace':'Feedback: workshops and learning';const t=dict[lang];document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t[e.dataset.i18n]);document.querySelector('#cz').classList.toggle('active',lang==='cz');document.querySelector('#en').classList.toggle('active',lang==='en');t.q.forEach((q,i)=>{let html=`<div class="num">${String(i+1).padStart(2,'0')} · ${q.req?t.required:t.optional}</div><h2>${esc(q.title)} ${q.req?'<span class="req">*</span>':''}</h2>`;let hint=q.hint|| (q.max?t.limited.replace('{n}',q.max):q.type==='checks'?t.select:'');if(hint)html+=`<p class="help">${esc(hint)}</p>`;if(q.type==='text'){html+=`<textarea aria-label="${esc(q.title)}" placeholder="${esc(q.placeholder)}"></textarea>`}else if(q.type==='rating'){html+='<div class="rating">'+q.labels.map((a,j)=>`<label><strong>${j+1}</strong><input type="radio" name="q${i}" value="${j}" ${Array.isArray(store[i])&&store[i].includes(j)?'checked':''}><span>${esc(a)}</span></label>`).join('')+'</div>'}else{html+='<div class="opts">'+q.opts.map((a,j)=>`<label class="choice"><input type="${q.type==='radio'?'radio':'checkbox'}" name="q${i}" value="${j}" ${Array.isArray(store[i])&&store[i].includes(j)?'checked':''}><span>${esc(a)}</span></label>`).join('')+'</div>'}document.getElementById('q'+(i+1)).innerHTML=html; if(q.type==='text')document.getElementById('q'+(i+1)).querySelector('textarea').value=typeof store[i]==='string'?store[i]:'';});const msg=document.getElementById('message');msg.textContent='';msg.className='message';progress();}
-function isComplete(i){const q=document.getElementById('q'+(i+1));const ta=q.querySelector('textarea');if(ta)return ta.value.trim().length>0;return !!q.querySelector('input:checked')}
-function progress(){let required=[0,1,2,3,4,5,6,7,8,9];let completed=required.filter(isComplete).length;document.getElementById('count').textContent=`${completed} / ${required.length}`;document.getElementById('progress').style.width=(completed/required.length*100)+'%'}
-document.getElementById('survey').addEventListener('change',e=>{if(e.target.type==='checkbox'){const i=Number(e.target.name.slice(1));const lim=dict[lang].q[i].max;if(lim){const inputs=[...document.querySelectorAll(`[name="q${i}"]:checked`)];if(inputs.length>lim){e.target.checked=false;const msg=document.getElementById('message');msg.textContent=dict[lang].max+lim+'.';msg.className='message warn';}}}progress()});
-document.getElementById('survey').addEventListener('input',e=>{if(e.target.tagName==='TEXTAREA')progress()});
-for(const x of ['cz','en'])document.getElementById(x).addEventListener('click',()=>{collect();lang=x;paint()});
-document.getElementById('review').addEventListener('click',()=>{let r=[0,1,2,3,4,5,6,7,8,9].filter(i=>!isComplete(i));const msg=document.getElementById('message');msg.textContent=r.length?dict[lang].missing+r.map(i=>'Q'+(i+1)).join(', ')+'.':dict[lang].ok;msg.className='message '+(r.length?'warn':'ok');if(r.length)document.getElementById('q'+(r[0]+1)).scrollIntoView({behavior:'smooth',block:'center'})});document.getElementById('print').addEventListener('click',()=>window.print());paint();
-</script>
-</body></html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Product Workshops & Learning — Feedback 2026 / Needs 2027</title>
+    <style>
+      :root {
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Arial,
+          sans-serif;
+        color: #17243b;
+        background: #f4f6fa;
+        font-synthesis: none;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 28px 18px 76px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .brand {
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        color: #284783;
+      }
+      .switch {
+        display: flex;
+        border: 1px solid #d6deed;
+        border-radius: 12px;
+        background: white;
+        padding: 4px;
+        gap: 2px;
+      }
+      .switch button {
+        background: transparent;
+        color: #425574;
+        border: 0;
+        border-radius: 9px;
+        padding: 8px 15px;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      .switch button.active {
+        background: #173c7c;
+        color: white;
+      }
+      .hero {
+        background: linear-gradient(120deg, #193b7a, #365ba0);
+        color: #fff;
+        border-radius: 22px;
+        padding: 34px 34px 30px;
+        box-shadow: 0 12px 32px #1d3b7316;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 11px;
+        font-weight: 800;
+        opacity: 0.8;
+      }
+      .hero h1 {
+        font-size: clamp(25px, 4vw, 38px);
+        line-height: 1.16;
+        margin: 12px 0 15px;
+        letter-spacing: -0.025em;
+      }
+      .hero p {
+        line-height: 1.6;
+        font-size: 15px;
+        color: #edf2ff;
+        max-width: 720px;
+        margin: 0 0 18px;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .chip {
+        border: 1px solid #ffffff50;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+      .bar {
+        margin: 20px 0 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #66758f;
+        font-weight: 700;
+      }
+      .track {
+        height: 7px;
+        background: #dce4f0;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+      .progress {
+        height: 100%;
+        width: 0%;
+        background: #2f64c0;
+        transition: width 0.2s;
+      }
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 12px;
+        color: #53698f;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 29px 0 13px;
+      }
+      .section-label:after {
+        content: "";
+        height: 1px;
+        background: #dce3ef;
+        flex: 1;
+      }
+      .q {
+        background: #fff;
+        border: 1px solid #e2e8f2;
+        border-radius: 17px;
+        padding: 23px 25px;
+        margin: 12px 0;
+        box-shadow: 0 3px 12px #1b37660a;
+      }
+      .num {
+        color: #2e61b7;
+        font-size: 12px;
+        font-weight: 850;
+        margin-bottom: 6px;
+      }
+      .q h2 {
+        font-size: 17px;
+        line-height: 1.4;
+        margin: 0 0 5px;
+        letter-spacing: -0.01em;
+      }
+      .help {
+        color: #66758b;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 0 0 14px;
+      }
+      .req {
+        color: #bc4d43;
+      }
+      .opts {
+        display: grid;
+        gap: 8px;
+      }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        border: 1px solid #e4e9f2;
+        background: #fbfcfe;
+        border-radius: 11px;
+        padding: 11px 12px;
+        line-height: 1.4;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .choice:has(input:checked) {
+        border-color: #5382ca;
+        background: #eff5ff;
+      }
+      .choice input {
+        accent-color: #235eb0;
+        width: 16px;
+        height: 16px;
+        flex: none;
+        margin: 2px 0 0;
+      }
+      .rating {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 7px;
+      }
+      .rating label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid #e0e6f2;
+        border-radius: 11px;
+        padding: 11px 3px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #516481;
+      }
+      .rating label:has(input:checked) {
+        background: #e9f1ff;
+        border-color: #447bd2;
+        color: #163f8b;
+      }
+      .rating input {
+        accent-color: #225cb3;
+      }
+      .rating strong {
+        font-size: 18px;
+      }
+      textarea {
+        width: 100%;
+        resize: vertical;
+        border: 1px solid #d5deeb;
+        background: #fbfdff;
+        border-radius: 12px;
+        padding: 13px;
+        font: inherit;
+        font-size: 14px;
+        min-height: 91px;
+        line-height: 1.6;
+      }
+      textarea:focus {
+        outline: 2px solid #a8c4fa;
+        outline-offset: 1px;
+      }
+      .foot {
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #e2e8f2;
+        border-radius: 18px;
+        margin-top: 24px;
+        padding: 26px 25px 22px;
+      }
+      .foot:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(120deg, #193b7a, #365ba0);
+      }
+      .foot p {
+        font-size: 13px;
+        color: #65758f;
+        line-height: 1.55;
+        margin: 0 0 18px;
+      }
+      .btns {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 11px;
+        background: #184482;
+        color: white;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 12px 19px;
+        cursor: pointer;
+        box-shadow: 0 6px 16px -5px #18448270;
+        transition:
+          background-color 0.15s ease,
+          box-shadow 0.15s ease,
+          transform 0.1s ease;
+      }
+      .btn svg {
+        flex: none;
+      }
+      .btn:hover {
+        background: #123766;
+        box-shadow: 0 8px 20px -5px #18448270;
+      }
+      .btn:active {
+        transform: translateY(1px) scale(0.98);
+        box-shadow: 0 3px 10px -4px #18448270;
+      }
+      .btn:focus-visible {
+        outline: 2px solid #90b4ec;
+        outline-offset: 2px;
+      }
+      .btn.secondary {
+        background: #e9eef8;
+        color: #244675;
+        box-shadow: none;
+      }
+      .btn.secondary:hover {
+        background: #dbe5f7;
+      }
+      .btn.secondary:active {
+        transform: translateY(1px) scale(0.98);
+      }
+      .btn.secondary:focus-visible {
+        outline: 2px solid #789ad8;
+        outline-offset: 2px;
+      }
+      .message {
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 650;
+        color: #365f9a;
+        transition: color 0.15s ease;
+      }
+      .message:empty {
+        margin-top: 0;
+      }
+      .message.ok {
+        color: #1f7a44;
+      }
+      .message.warn {
+        color: #ad342d;
+      }
+      .smallprint {
+        color: #7c8799;
+        font-size: 11px;
+        line-height: 1.6;
+        margin-top: 19px;
+      }
+      .err {
+        color: #ad342d;
+        font-size: 13px;
+        margin: 9px 0 0;
+      }
+      .success {
+        margin-top: 14px;
+        padding: 13px 15px;
+        border: 1px solid #b5dec6;
+        background: #effaf3;
+        border-radius: 10px;
+        color: #245d39;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      @media (max-width: 560px) {
+        .wrap {
+          padding: 14px 11px 50px;
+        }
+        .hero {
+          padding: 27px 21px;
+        }
+        .q {
+          padding: 20px 17px;
+        }
+        .rating {
+          gap: 4px;
+        }
+        .rating label {
+          padding: 9px 0;
+        }
+        .foot {
+          padding: 18px 18px 16px;
+        }
+        .btns {
+          flex-direction: column;
+        }
+        .btns .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        .wrap {
+          padding: 0;
+        }
+        .top,
+        .bar,
+        .track,
+        .foot,
+        .smallprint {
+          display: none;
+        }
+        .hero {
+          color: #17243b;
+          background: white;
+          box-shadow: none;
+          padding: 0 0 14px;
+        }
+        .hero p {
+          color: #17243b;
+        }
+        .chip {
+          border-color: #aaa;
+          color: #17243b;
+        }
+        .q {
+          break-inside: avoid;
+          box-shadow: none;
+        }
+        .section-label {
+          margin-top: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      ====================================================================
+      OTÁZKY DOTAZNÍKU
+      ====================================================================
+      Otázky a možnosti odpovědí se načítají ze souboru "otazky.js"
+      (musí být ve STEJNÉ SLOŽCE jako tento HTML soubor). Pro úpravu
+      obsahu dotazníku otevřete a upravte "otazky.js" – tento HTML
+      soubor pak jen zajišťuje vzhled a chování stránky.
+    -->
+    <script src="otazky.js"></script>
+
+    <div class="wrap">
+      <div class="top">
+        <span class="brand">CoE PRODUCT MANAGEMENT</span>
+        <div class="switch" role="group" aria-label="Language">
+          <button id="cz" class="active" type="button">CZ</button><button id="en" type="button">EN</button>
+        </div>
+      </div>
+      <header class="hero">
+        <div class="eyebrow" data-i18n="eyebrow"></div>
+        <h1 data-i18n="title"></h1>
+        <p data-i18n="intro"></p>
+        <div class="meta">
+          <span class="chip" data-i18n="duration"></span><span class="chip" data-i18n="purpose"></span>
+        </div>
+      </header>
+      <div class="bar"><span data-i18n="progressLabel"></span><span id="count">0 / 5</span></div>
+      <div class="track"><div class="progress" id="progress"></div></div>
+      <form id="survey" novalidate>
+        <!-- Otázky i nadpisy sekcí (01 · Vaše účast, 02 · …) se vykreslují
+             automaticky podle dat ze <script> sekce "OTÁZKY A TEXTY
+             DOTAZNÍKU" níže. Zde v HTML nic upravovat nemusíte. -->
+        <div id="questions"></div>
+        <div class="foot">
+          <p data-i18n="thanks"></p>
+          <div class="btns">
+            <button class="btn" type="button" id="review">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20 6 9 17l-5-5" /></svg
+              ><span data-i18n="review"></span></button
+            ><button class="btn secondary" type="button" id="print">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M6 9V3h12v6" />
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                <rect x="6" y="14" width="12" height="7" /></svg
+              ><span data-i18n="print"></span>
+            </button>
+          </div>
+          <p class="message" id="message" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+      <div class="smallprint" data-i18n="demo"></div>
+    </div>
+    <script>
+      // #region TEXTY ROZHRANÍ (tlačítka, úvod, hlášky) – méně časté úpravy
+      // Otázky a možnosti odpovědí NEJSOU zde – ty upravujete v souboru
+      // "otazky.js" (viz návod na samém začátku tohoto souboru).
+      const dict = {
+        cz: {
+          eyebrow: "Zpětná vazba · 2026 / Podpora · 2027",
+          title: "Vaše zkušenost s produktovými workshopy a edukací",
+          intro:
+            "V uplynulém roce jsme společně pracovali na produktových vizích, strategiích, Kompasu a rozvoji produktových kompetencí. Chceme zjistit, co pro vás bylo užitečné, co méně, kde dnes vidíte největší mezery a jak vás můžeme nejlépe podpořit v roce 2027. Nejde o hodnocení jednotlivců nebo týmů. Odpovídejte prosím podle své skutečné zkušenosti.",
+          duration: "Přibližně 5–7 minut",
+          purpose: "Pomozte nám zlepšit podporu týmů",
+          progressLabel: "Vyplněné povinné otázky",
+          thanks:
+            "Děkujeme za otevřenou zpětnou vazbu. Pomůže nám rozhodnout, co zachovat, co změnit a na co se zaměřit v roce 2027.",
+          review: "Zkontrolovat vyplnění",
+          print: "Tisk / uložit jako PDF",
+          demo: "Toto je interaktivní náhled dotazníku pro schválení. Odpovědi se nikam neodesílají ani neukládají. Pro distribuci účastníkům jej převeďte do schváleného interního nástroje (např. Microsoft Forms).",
+          missing: "Doplňte prosím povinné otázky: ",
+          ok: "Povinné otázky jsou vyplněné. Tento náhled neodesílá odpovědi.",
+          max: "Lze vybrat nejvýše ",
+          required: "Povinná otázka",
+          optional: "Nepovinné",
+          select: "Můžete vybrat více možností.",
+          limited: "Vyberte nejvýše {n} možnosti.",
+        },
+        en: {
+          eyebrow: "Feedback · 2026 / Support · 2027",
+          title: "Your experience with product workshops and learning activities",
+          intro:
+            "Over the past year, we worked together on product visions, strategies, Kompas, and product management capabilities. We would like to understand what was useful, what was not, where you see the biggest gaps, and how we can best support you in 2027. This is not an evaluation of individuals or teams. Please answer based on your actual experience.",
+          duration: "Approximately 5–7 minutes",
+          purpose: "Help us improve support for teams",
+          progressLabel: "Required questions completed",
+          thanks:
+            "Thank you for your candid feedback. It will help us decide what to keep, what to improve, and where to focus in 2027.",
+          review: "Check completion",
+          print: "Print / save as PDF",
+          demo: "This is an interactive survey preview for approval. Answers are not submitted or stored. To distribute it, recreate it in an approved internal tool (e.g. Microsoft Forms).",
+          missing: "Please complete the required questions: ",
+          ok: "All required questions are completed. This preview does not submit responses.",
+          max: "You can select up to ",
+          required: "Required",
+          optional: "Optional",
+          select: "Select all that apply.",
+          limited: "Select up to {n} options.",
+        },
+      };
+      // #endregion
+    </script>
+    <script>
+      // #region TECHNICKÝ KÓD – DÁL JIŽ NEUPRAVUJTE
+      // Tento blok řídí chování stránky (vykreslení otázek, přepínání
+      // jazyka CZ/EN, kontrolu vyplnění, tisk). Pokud zde neumíte
+      // programovat, nic neupravujte – stačí upravovat otázky a texty
+      // ve škriptu výše.
+      //
+      // esc() je bezpečná escapovací funkce - zůstává mimo "try" blok,
+      // takže funguje i tehdy, když je chyba v otázkách výše, a použijeme
+      // ji i v chybové hlášce níže.
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+        );
+
+      // Přečte surový text otázek, který do globální proměnné window.* uloží
+      // externí soubor "otazky.js" (viz <script src="otazky.js"> v <body>).
+      // Pokud proměnná chybí/není řetězec, znamená to, že se "otazky.js"
+      // nenačetl (špatná cesta/soubor chybí) nebo má chybu v zápisu
+      // (např. chybějící zpětný apostrof) – vrátíme srozumitelnou chybu.
+      const readTextBlock = (globalName, soubor) => {
+        const val = window[globalName];
+        if (typeof val !== "string") {
+          throw new Error(
+            `Nepodařilo se načíst otázky z proměnné "${globalName}" v souboru "${soubor}". ` +
+              `Zkontrolujte, že soubor "${soubor}" existuje ve STEJNÉ SLOŽCE jako tento HTML soubor ` +
+              `a že není v jeho textu nějaká zapomenutá/přebytečná zpětná uvozovka (\`) nebo "\${".`,
+          );
+        }
+        return val;
+      };
+
+      // Odstraní diakritiku – používá se jen pro TOLERANTNÍ rozpoznání
+      // klíčových slov (např. "Povinna" i "Povinná"), zobrazovaný text
+      // otázek a možností se tím nijak nemění.
+      const stripDiacritics = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      // Převede jednoduchý textový zápis otázek (viz návod na začátku
+      // souboru) na pole otázek, které dál používá vykreslování stránky.
+      // Pokud je v textu chyba, vyhodí srozumitelnou (českou) chybovou
+      // hlášku s názvem otázky a popisem, co přesně chybí/je špatně.
+      function parseOtazky(rawText, blockLabel) {
+        const lines = rawText.replace(/\r\n/g, "\n").split("\n");
+        const questions = [];
+        let current = null;
+        let pendingSection = null;
+
+        const finishCurrent = () => {
+          if (!current) return;
+          if (current.req === undefined) {
+            throw new Error(`Otázce "${current.title}" (${blockLabel}) chybí řádek "Povinná: ano" nebo "Povinná: ne".`);
+          }
+          if (!current.type) {
+            throw new Error(`Otázce "${current.title}" (${blockLabel}) chybí řádek "Typ: …".`);
+          }
+          if (current.type !== "text" && current.opts.length === 0) {
+            throw new Error(
+              `Otázka "${current.title}" (${blockLabel}) nemá žádnou možnost odpovědi (řádky začínající pomlčkou "- ").`,
+            );
+          }
+          questions.push(current);
+        };
+
+        lines.forEach((rawLine, i) => {
+          const lineNo = i + 1;
+          const line = rawLine.trim();
+          if (line === "" || line.startsWith("//")) return; // prázdný řádek / poznámka – přeskočit
+
+          if (line.startsWith("## ")) {
+            pendingSection = line.slice(3).trim();
+            return;
+          }
+
+          const qMatch = line.match(/^\d+[.)]\s*(.+)$/);
+          if (qMatch) {
+            finishCurrent();
+            current = {
+              title: qMatch[1].trim(),
+              type: null,
+              req: undefined,
+              opts: [],
+              section: pendingSection || undefined,
+            };
+            pendingSection = null;
+            return;
+          }
+
+          if (!current) {
+            throw new Error(
+              `Řádek ${lineNo} ("${line}") v bloku "${blockLabel}" je dříve, než začala otázka. Otázka musí ` +
+                `začínat číslem a tečkou nebo závorkou, např. "1) Text otázky".`,
+            );
+          }
+
+          // Řádek s možností odpovědi (začíná pomlčkou/odrážkou) se
+          // nerozděluje podle "|" – text možnosti by tak mohl přijít o část.
+          const optMatch = line.match(/^[-•*]\s*(.+)$/);
+          if (optMatch) {
+            current.opts.push(optMatch[1].trim());
+            return;
+          }
+
+          // Ostatní řádky (Typ/Povinná/Nápověda/Placeholder) mohou být
+          // na jednom řádku vedle sebe, oddělené svislítkem "|", např.:
+          //   Typ: jedna možnost | Povinná: ano
+          const segments = line.split("|").map((seg) => seg.trim());
+          segments.forEach((segment) => {
+            if (segment === "") return;
+            processAttributeLine(segment, current, blockLabel, stripDiacritics);
+          });
+        });
+        finishCurrent();
+
+        if (questions.length === 0) {
+          throw new Error(`V bloku "${blockLabel}" se nepodařilo najít žádnou otázku.`);
+        }
+        return questions;
+      }
+
+      // Zpracuje jeden "atributový" řádek/segment otázky: "Typ: …",
+      // "Povinná: …", "Nápověda: …" nebo "Placeholder: …".
+      function processAttributeLine(segment, current, blockLabel, stripDiacritics) {
+        let m;
+        if ((m = segment.match(/^typ\s*:\s*(.+)$/i))) {
+          const raw = m[1].trim();
+          const norm = stripDiacritics(raw).toLowerCase();
+          if (norm.includes("jedna")) current.type = "radio";
+          else if (norm.includes("vice")) current.type = "checks";
+          else if (norm.includes("hodnoceni") || norm.includes("skala")) current.type = "rating";
+          else if (norm.includes("text")) current.type = "text";
+          else
+            throw new Error(
+              `U otázky "${current.title}" (${blockLabel}) je neznámý "Typ: ${raw}". Použijte jednu z hodnot: ` +
+                `"jedna možnost", "více možností", "hodnocení 1-5" nebo "volný text".`,
+            );
+          const maxMatch = raw.match(/max\s*(\d+)/i);
+          if (maxMatch) current.max = Number(maxMatch[1]);
+          return;
+        }
+        if ((m = segment.match(/^povinn[áa]\s*:\s*(.+)$/i))) {
+          const val = stripDiacritics(m[1].trim()).toLowerCase();
+          if (val === "ano") current.req = true;
+          else if (val === "ne") current.req = false;
+          else
+            throw new Error(
+              `U otázky "${current.title}" (${blockLabel}) je neplatná hodnota "Povinná: ${m[1].trim()}". ` +
+                `Použijte "ano" nebo "ne".`,
+            );
+          return;
+        }
+        if ((m = segment.match(/^n[áa]pov[ěe]da\s*:\s*(.*)$/i))) {
+          current.hint = m[1].trim();
+          return;
+        }
+        if ((m = segment.match(/^placeholder\s*:\s*(.*)$/i))) {
+          current.placeholder = m[1].trim();
+          return;
+        }
+        throw new Error(
+          `Nerozumím řádku "${segment}" u otázky "${current.title}" (${blockLabel}). Možnosti musí začínat ` +
+            `pomlčkou "- " a ostatní řádky odpovídat vzoru "Typ:", "Povinná:", "Nápověda:" nebo "Placeholder:".`,
+        );
+      }
+
+      try {
+        let lang = "cz";
+        const store = {};
+
+        // Otázky se načtou a rozparsují z externího souboru "otazky.js"
+        // (proměnné window.OTAZKY_CZ / window.OTAZKY_EN). Pokud má text
+        // chybu, parseOtazky() vyhodí srozumitelnou hlášku, kterou
+        // zachytí "catch" na konci tohoto bloku.
+        dict.cz.q = parseOtazky(readTextBlock("OTAZKY_CZ", "otazky.js"), "čeština");
+        dict.en.q = parseOtazky(readTextBlock("OTAZKY_EN", "otazky.js"), "angličtina");
+        if (dict.cz.q.length !== dict.en.q.length) {
+          throw new Error(
+            `Český blok otázek má ${dict.cz.q.length} otázek, anglický ${dict.en.q.length}. Obě jazykové verze ` +
+              `musí mít stejný počet otázek ve stejném pořadí.`,
+          );
+        }
+
+        // Vrátí indexy otázek, které jsou aktuálně označené jako povinné
+        // (req: true) – počítá se vždy znovu podle aktuálního seznamu
+        // otázek, takže funguje i po přidání/odebrání otázky.
+        function requiredIndices() {
+          return dict[lang].q.map((q, i) => i).filter((i) => dict[lang].q[i].req);
+        }
+
+        function collect() {
+          dict[lang].q.forEach((_, i) => {
+            const q = document.getElementById("q" + (i + 1));
+            const selected = [...q.querySelectorAll("input:checked")].map((n) => Number(n.value));
+            const tx = q.querySelector("textarea");
+            store[i] = tx ? tx.value : selected;
+          });
+        }
+
+        function paint() {
+          document.documentElement.lang = lang;
+          document.title = lang === "cz" ? "Zpětná vazba: workshopy a edukace" : "Feedback: workshops and learning";
+          const t = dict[lang];
+          document.querySelectorAll("[data-i18n]").forEach((e) => (e.textContent = t[e.dataset.i18n]));
+          document.querySelector("#cz").classList.toggle("active", lang === "cz");
+          document.querySelector("#en").classList.toggle("active", lang === "en");
+          // Otázky (a nadpisy sekcí) se vykreslují dynamicky podle pole
+          // "dict[lang].q" – stačí tedy upravovat jen otázky výše, HTML
+          // se přizpůsobí samo (včetně progress baru a kontroly vyplnění).
+          const container = document.getElementById("questions");
+          container.innerHTML = "";
+          t.q.forEach((q, i) => {
+            if (q.section) {
+              const sectionLabel = document.createElement("div");
+              sectionLabel.className = "section-label";
+              sectionLabel.textContent = q.section;
+              container.appendChild(sectionLabel);
+            }
+            let html = `<div class="num">${String(i + 1).padStart(2, "0")} · ${q.req ? t.required : t.optional}</div><h2>${esc(q.title)} ${q.req ? '<span class="req">*</span>' : ""}</h2>`;
+            let hint = q.hint || (q.max ? t.limited.replace("{n}", q.max) : q.type === "checks" ? t.select : "");
+            if (hint) html += `<p class="help">${esc(hint)}</p>`;
+            if (q.type === "text") {
+              html += `<textarea aria-label="${esc(q.title)}" placeholder="${esc(q.placeholder || "")}"></textarea>`;
+            } else if (q.type === "rating") {
+              html +=
+                '<div class="rating">' +
+                q.opts
+                  .map(
+                    (a, j) =>
+                      `<label><strong>${j + 1}</strong><input type="radio" name="q${i}" value="${j}" ${Array.isArray(store[i]) && store[i].includes(j) ? "checked" : ""}><span>${esc(a)}</span></label>`,
+                  )
+                  .join("") +
+                "</div>";
+            } else {
+              html +=
+                '<div class="opts">' +
+                q.opts
+                  .map(
+                    (a, j) =>
+                      `<label class="choice"><input type="${q.type === "radio" ? "radio" : "checkbox"}" name="q${i}" value="${j}" ${Array.isArray(store[i]) && store[i].includes(j) ? "checked" : ""}><span>${esc(a)}</span></label>`,
+                  )
+                  .join("") +
+                "</div>";
+            }
+            const qDiv = document.createElement("div");
+            qDiv.id = "q" + (i + 1);
+            qDiv.className = "q";
+            qDiv.innerHTML = html;
+            container.appendChild(qDiv);
+            if (q.type === "text") qDiv.querySelector("textarea").value = typeof store[i] === "string" ? store[i] : "";
+          });
+          const msg = document.getElementById("message");
+          msg.textContent = "";
+          msg.className = "message";
+          progress();
+        }
+
+        function isComplete(i) {
+          const q = document.getElementById("q" + (i + 1));
+          const ta = q.querySelector("textarea");
+          if (ta) return ta.value.trim().length > 0;
+          return !!q.querySelector("input:checked");
+        }
+
+        function progress() {
+          const required = requiredIndices();
+          const completed = required.filter(isComplete).length;
+          document.getElementById("count").textContent = `${completed} / ${required.length}`;
+          document.getElementById("progress").style.width = (completed / required.length) * 100 + "%";
+        }
+
+        document.getElementById("survey").addEventListener("change", (e) => {
+          if (e.target.type === "checkbox") {
+            const i = Number(e.target.name.slice(1));
+            const lim = dict[lang].q[i].max;
+            if (lim) {
+              const inputs = [...document.querySelectorAll(`[name="q${i}"]:checked`)];
+              if (inputs.length > lim) {
+                e.target.checked = false;
+                const msg = document.getElementById("message");
+                msg.textContent = dict[lang].max + lim + ".";
+                msg.className = "message warn";
+              }
+            }
+          }
+          progress();
+        });
+        document.getElementById("survey").addEventListener("input", (e) => {
+          if (e.target.tagName === "TEXTAREA") progress();
+        });
+        for (const x of ["cz", "en"])
+          document.getElementById(x).addEventListener("click", () => {
+            collect();
+            lang = x;
+            paint();
+          });
+        document.getElementById("review").addEventListener("click", () => {
+          const r = requiredIndices().filter((i) => !isComplete(i));
+          const msg = document.getElementById("message");
+          msg.textContent = r.length
+            ? dict[lang].missing + r.map((i) => "Q" + (i + 1)).join(", ") + "."
+            : dict[lang].ok;
+          msg.className = "message " + (r.length ? "warn" : "ok");
+          if (r.length)
+            document.getElementById("q" + (r[0] + 1)).scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+        document.getElementById("print").addEventListener("click", () => window.print());
+        paint();
+      } catch (err) {
+        // Nejčastější příčinou bývá chyba v zápisu otázek výše (viz
+        // bloky "otazky-cz" / "otazky-en"). Místo prázdné/rozbité
+        // stránky zobrazíme srozumitelné upozornění s popisem chyby.
+        console.error(err);
+        const box = document.querySelector(".wrap") || document.body;
+        box.innerHTML = `
+          <div style="max-width:640px;margin:60px auto;padding:28px 30px;border:2px solid #e2a1a1;border-radius:16px;background:#fff5f5;font-family:system-ui,sans-serif;line-height:1.6;color:#7a1f1f">
+            <h2 style="margin:0 0 12px">⚠️ V zápisu otázek je chyba</h2>
+            <p style="margin:0 0 10px">Dotazník se nepodařilo zobrazit. Podrobnosti o chybě (včetně které otázky se týká) najdete níže.</p>
+            <p style="margin:0 0 10px">Zkontrolujte poslední provedenou úpravu v souboru „otazky.js“ (musí být ve stejné složce jako tento HTML soubor), nebo se vraťte k předchozí funkční verzi (např. v historii GitHubu).</p>
+            <p style="margin:0;font-family:ui-monospace,monospace;font-size:12.5px;background:#fff;padding:10px 12px;border-radius:8px;border:1px solid #eccfcf;word-break:break-word">${esc(err.message)}</p>
+          </div>`;
+      }
+      // #endregion
+    </script>
+  </body>
+</html>
