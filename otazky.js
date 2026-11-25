@@ -44,7 +44,7 @@ window.OTAZKY_CZ = `
 
 1) Jaká byla vaše role při workshopech?
 Typ: jedna možnost | Povinná: ano
-- Producttttt 
+- Product Manager / Product Owner
 - Domain / Tribe / People Lead
 - Člen/ka produktového týmu (design, engineering, business, další)
 - Jiná role
